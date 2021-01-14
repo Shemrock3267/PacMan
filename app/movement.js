@@ -4,6 +4,7 @@ import { pacDotEaten } from './interaction.js';
 //starting position of pacman
 let pacmanCurrentIndex = 490;
 
+
 function moveDown() { 
   pacmanCurrentIndex += width;
 }
@@ -72,5 +73,6 @@ function control(e) {
   squares[pacmanCurrentIndex].classList.add('pacman')
   pacDotEaten();
 }
+
 
 export { pacmanCurrentIndex, control };

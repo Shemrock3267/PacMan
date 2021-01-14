@@ -1,4 +1,5 @@
 import { pacmanCurrentIndex } from './movement.js';
+import { Ghost } from './Ghost.js';
 
 const grid = document.querySelector('.grid');
 const width = 28;
@@ -42,6 +43,13 @@ const layout = [
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ];
 
+const ghosts = [
+  new Ghost('blinky', 348, 250),
+  new Ghost('pinky', 376, 400),
+  new Ghost('inky', 351, 300),
+  new Ghost('clyde', 379, 500)
+]
+
 function createBoard() {
 
   for (let i = 0; i < layout.length; i++) {
@@ -63,7 +71,12 @@ function createBoard() {
       squares[i].classList.add('tunnel');
     }
   }
+  // add pacman onto the grid
   squares[pacmanCurrentIndex].classList.add('pacman');
+  // add ghosts onto the grid
+  for (const ghost of ghosts) { 
+    squares[ghost.startIndex].classList.add(ghost.className);
+  }
 }
 
 export { grid, width, squares,createBoard };

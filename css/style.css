@@ -40,3 +40,23 @@ html, body {
 .tunnel {
   background-color: blueviolet;
 }
+
+.blinky {
+  background-color: red;
+  border: none;
+}
+
+.pinky {
+  background-color: pink;
+  border: none;
+}
+
+.inky {
+  background-color: lightseagreen;
+  border: none;
+}
+
+.clyde {
+  background-color: darkkhaki;
+  border: none;
+}
