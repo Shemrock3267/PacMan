@@ -66,4 +66,4 @@ function createBoard() {
   squares[pacmanCurrentIndex].classList.add('pacman');
 }
 
-export { grid, layout, width, squares,createBoard };
+export { grid, width, squares,createBoard };
