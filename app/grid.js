@@ -1,8 +1,8 @@
 import { pacmanCurrentIndex } from './movement.js';
-import { Ghost } from './Ghost.js';
+import { ghosts } from './movement.js';
+
 
 const grid = document.querySelector('.grid');
-const width = 28;
 let squares = [];
 
 // 0 - pacdots
@@ -24,7 +24,7 @@ const layout = [
   1,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,
   1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,
   1,1,1,1,1,1,0,1,1,4,4,4,4,4,4,4,4,4,4,1,1,0,1,1,1,1,1,1,
-  1,1,1,1,1,1,0,1,1,4,1,1,1,2,2,1,1,1,4,1,1,0,1,1,1,1,1,1,
+  1,1,1,1,1,1,0,1,1,4,1,2,2,2,2,2,2,1,4,1,1,0,1,1,1,1,1,1,
   1,1,1,1,1,1,0,1,1,4,1,2,2,2,2,2,2,1,4,1,1,0,1,1,1,1,1,1,
   5,4,4,4,4,4,0,0,0,4,1,2,2,2,2,2,2,1,4,0,0,0,4,4,4,4,4,5,
   1,1,1,1,1,1,0,1,1,4,1,2,2,2,2,2,2,1,4,1,1,0,1,1,1,1,1,1,
@@ -43,12 +43,6 @@ const layout = [
   1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 ];
 
-const ghosts = [
-  new Ghost('blinky', 348, 250),
-  new Ghost('pinky', 376, 400),
-  new Ghost('inky', 351, 300),
-  new Ghost('clyde', 379, 500)
-]
 
 function createBoard() {
 
@@ -75,8 +69,9 @@ function createBoard() {
   squares[pacmanCurrentIndex].classList.add('pacman');
   // add ghosts onto the grid
   for (const ghost of ghosts) { 
-    squares[ghost.startIndex].classList.add(ghost.className);
+    squares[ghost.currentIndex].classList.add(ghost.className);
+    squares[ghost.currentIndex].classList.add('ghost');
   }
 }
 
-export { grid, width, squares,createBoard };
+export { grid, squares, createBoard };
