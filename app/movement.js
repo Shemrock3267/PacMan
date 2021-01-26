@@ -1,6 +1,6 @@
 import { squares } from './grid.js';
 import { width } from './width.js';
-import { pacDotEaten, powerPelletEaten } from './interaction.js';
+import { pacDotEaten, powerPelletEaten, ghostEaten, checkForGameOver } from './interaction.js';
 import { Ghost } from './Ghost.js';
 
 
@@ -8,10 +8,10 @@ import { Ghost } from './Ghost.js';
 let pacmanCurrentIndex = 490;
 
 const ghosts = [
-  new Ghost('blinky', 348, 250),
-  new Ghost('pinky', 376, 400),
-  new Ghost('inky', 351, 300),
-  new Ghost('clyde', 379, 500)
+  new Ghost('blinky', 348, 450),
+  new Ghost('pinky', 376, 600),
+  new Ghost('inky', 351, 500),
+  new Ghost('clyde', 379, 700)
 ]
 
 function moveDown() { 
@@ -79,8 +79,11 @@ function control(e) {
       }
     break
   }
-  squares[pacmanCurrentIndex].classList.add('pacman')
-  pacDotEaten();
+  squares[pacmanCurrentIndex].classList.add('pacman');
+  if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) { 
+    pacDotEaten();
+  }
+  // pacDotEaten();
   powerPelletEaten();
 }
 
@@ -89,36 +92,41 @@ ghosts.forEach(ghost => moveGhost(ghost));
 function moveGhost(ghost) {
   const directions = [-1, +1, -width, +width];
   let direction = directions[Math.floor(Math.random() * directions.length)];
-  console.log(direction);
 
   ghost.timerId = setInterval(() => { 
   
-  if (ghost.currentIndex === 364) {
-    ghost.currentIndex = 390;
-  } else if (ghost.currentIndex === 391) { 
-    ghost.currentIndex = 365;
-  } 
+    if (ghost.currentIndex === 364) {
+      ghost.currentIndex = 390;
+    } else if (ghost.currentIndex === 391) { 
+      ghost.currentIndex = 365;
+    } 
 
-  if (
-    !squares[ghost.currentIndex + direction].classList.contains('wall') &&
-    !squares[ghost.currentIndex + direction].classList.contains('ghost')
-  ) {
-    //remove any ghost
-    squares[ghost.currentIndex].classList.remove(ghost.className);
-    squares[ghost.currentIndex].classList.remove('ghost', 'scared-ghost');
-    //add direction to current Index
-    ghost.currentIndex += direction;
-    //add ghost class
-    squares[ghost.currentIndex].classList.add(ghost.className);  
-    squares[ghost.currentIndex].classList.add('ghost');
-  } else direction = directions[Math.floor(Math.random() * directions.length)]
-
+    if (
+      !squares[ghost.currentIndex + direction].classList.contains('wall') &&
+      !squares[ghost.currentIndex + direction].classList.contains('ghost')
+    ) {
+      //remove any ghost
+      squares[ghost.currentIndex].classList.remove(ghost.className);
+      squares[ghost.currentIndex].classList.remove('ghost', 'scared-ghost');
+      //add direction to current Index
+      ghost.currentIndex += direction;
+      //add ghost class
+      squares[ghost.currentIndex].classList.add(ghost.className);  
+      squares[ghost.currentIndex].classList.add('ghost');
+    } else direction = directions[Math.floor(Math.random() * directions.length)]
+  
     if (ghost.isScared) { 
       squares[ghost.currentIndex].classList.add('scared-ghost');
     }
+    if (squares[pacmanCurrentIndex].classList.contains('scared-ghost')) { 
+      ghostEaten(ghost);
+    }
+    // check after each ghost step for game over
+    checkForGameOver();
+  
   }, ghost.speed)
-  // clearInterval(ghost.timerId);
+  
 };
-// clearInterval(ghost.timerId);
+
 
 export { pacmanCurrentIndex, ghosts, control };

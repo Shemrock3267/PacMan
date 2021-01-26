@@ -1,5 +1,5 @@
 import { squares } from './grid.js';
-import { pacmanCurrentIndex, ghosts} from './movement.js'
+import { pacmanCurrentIndex, ghosts, control} from './movement.js'
 
 const scoreDisplay = document.getElementById('score');
 let score = 0;
@@ -9,36 +9,55 @@ function showScore() {
 }
 
 function pacDotEaten() {
-  if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) {
-    squares[pacmanCurrentIndex].classList.remove('pac-dot');
-    score++;
-    showScore();
-  }
+  squares[pacmanCurrentIndex].classList.remove('pac-dot');
+  score++;
+  showScore();
+}
+
+function ghostEaten(ghost) { 
+  squares[ghost.currentIndex].classList.remove(ghost.className, 'ghost', 'scared-ghost');
+  ghost.currentIndex = ghost.startIndex;
+  score += 100;
+  squares[ghost.currentIndex].classList.add(ghost.className, 'ghost');
+  showScore();
 }
 
 function powerPelletEaten() { 
   if (squares[pacmanCurrentIndex].classList.contains('power-pellet')) { 
     squares[pacmanCurrentIndex].classList.remove('power-pellet');
     score += 10;
+    scareGhost();
     showScore();
-    scareGhost()
   }
 }
 
 function scareGhost() {
   ghosts.forEach(ghost => { 
     ghost.isScared = true;
-    // console.log(`Scared? ${ghost.isScared}`);
     // make ghost "brave" 
     setTimeout(() => {
       makeGhostBrave(ghost);
-      // console.log(`Scared? ${ghost.isScared}`);
     }, 10000);
   })
 }
 
 function makeGhostBrave(ghost) { 
   ghost.isScared = false;
+  squares[ghost.currentIndex].classList.remove('scared-ghost');
 }
 
-export { scoreDisplay, score, pacDotEaten, powerPelletEaten };
+function checkForGameOver() {
+  //if the square pacman is in contains a ghost AND the square does NOT contain a scared ghost 
+  if (squares[pacmanCurrentIndex].classList.contains('ghost')
+    && !squares[pacmanCurrentIndex].classList.contains('scared-ghost')) {
+      ghosts.forEach(ghost =>  clearInterval(ghost.timerId));
+      //remove eventlistener from our control function
+      document.removeEventListener('keyup', control);
+      //tell user the game is over
+      const gameOver = document.createElement('div');
+      gameOver.textContent = 'GAME OVER';
+      scoreDisplay.appendChild(gameOver);
+  }
+}
+
+export { scoreDisplay, score, pacDotEaten, powerPelletEaten, ghostEaten, checkForGameOver };
