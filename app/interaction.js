@@ -46,18 +46,31 @@ function makeGhostBrave(ghost) {
   squares[ghost.currentIndex].classList.remove('scared-ghost');
 }
 
+function stopAllInteractions(){ 
+  ghosts.forEach(ghost => clearInterval(ghost.timerId));
+  document.removeEventListener('keyup', control);
+}
 function checkForGameOver() {
   //if the square pacman is in contains a ghost AND the square does NOT contain a scared ghost 
   if (squares[pacmanCurrentIndex].classList.contains('ghost')
     && !squares[pacmanCurrentIndex].classList.contains('scared-ghost')) {
-      ghosts.forEach(ghost =>  clearInterval(ghost.timerId));
-      //remove eventlistener from our control function
-      document.removeEventListener('keyup', control);
-      //tell user the game is over
-      const gameOver = document.createElement('div');
-      gameOver.textContent = 'GAME OVER';
-      scoreDisplay.appendChild(gameOver);
+    stopAllInteractions();
+    
+    const gameOver = document.createElement('div');
+    gameOver.textContent = 'GAME OVER';
+    showScore();
+    scoreDisplay.appendChild(gameOver);
   }
 }
 
-export { scoreDisplay, score, pacDotEaten, powerPelletEaten, ghostEaten, checkForGameOver };
+function checkForWin() { 
+  if (score >= 550) { 
+    stopAllInteractions();
+    const gameWon = document.createElement('div');
+    gameWon.textContent = 'YOU WON';
+    showScore();
+    scoreDisplay.appendChild(gameWon);
+  }
+}
+
+export { score, pacDotEaten, powerPelletEaten, ghostEaten, checkForGameOver, checkForWin };

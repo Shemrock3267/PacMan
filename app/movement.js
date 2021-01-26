@@ -1,6 +1,6 @@
 import { squares } from './grid.js';
 import { width } from './width.js';
-import { pacDotEaten, powerPelletEaten, ghostEaten, checkForGameOver } from './interaction.js';
+import { pacDotEaten, powerPelletEaten, ghostEaten, checkForGameOver, checkForWin } from './interaction.js';
 import { Ghost } from './Ghost.js';
 
 
@@ -83,8 +83,9 @@ function control(e) {
   if (squares[pacmanCurrentIndex].classList.contains('pac-dot')) { 
     pacDotEaten();
   }
-  // pacDotEaten();
   powerPelletEaten();
+  checkForWin();
+  checkForGameOver();
 }
 
 ghosts.forEach(ghost => moveGhost(ghost));
@@ -123,7 +124,6 @@ function moveGhost(ghost) {
     }
     // check after each ghost step for game over
     checkForGameOver();
-  
   }, ghost.speed)
   
 };
